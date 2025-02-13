@@ -53,3 +53,6 @@ typing-extensions==4.12.2
 tzdata==2025.1
 urllib3==2.3.0
 wcwidth==0.2.13
+lm-eval==0.4.7
+fastapi==0.115.8
+uvicorn==0.34.0
