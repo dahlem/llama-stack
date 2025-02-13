@@ -25,4 +25,13 @@ def available_providers() -> List[ProviderSpec]:
                 Api.agents,
             ],
         ),
+        remote_provider_spec(
+            api=Api.eval,
+            adapter=AdapterSpec(
+                adapter_type="lm-harness",
+                pip_packages=["aiohttp"],  # For HTTP communication with the server
+                module="llama_stack.providers.remote.eval.lm_harness",
+                config_class="llama_stack.providers.remote.eval.lm_harness.LMHarnessEvalConfig",
+            ),
+        ),
     ]
