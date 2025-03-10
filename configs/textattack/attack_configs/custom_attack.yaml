@@ -18,7 +18,7 @@ constraints:
       embedding_type: paragramcf
       min_cos_sim: 0.7
       
-  - module: textattack.constraints.semantics
+  - module: textattack.constraints.semantics.sentence_encoders
     name: UniversalSentenceEncoder
     params:
       threshold: 0.8
@@ -45,7 +45,7 @@ goal_function:
       module: textattack.models.wrappers
       name: HuggingFaceModelWrapper
       params:
-        model_name: textattack/bert-base-uncased-sst2
+        model_name: distilbert-base-uncased-finetuned-sst-2-english
 
 # Search method
 search_method:
@@ -72,4 +72,4 @@ loggers:
   - module: textattack.loggers
     name: CSVLogger
     params:
-      filename: results/custom_attack_results.csv
+      filename: results/textattack/custom_attack_results.csv

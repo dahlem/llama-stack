@@ -16,11 +16,16 @@ model:
 
 # Dataset configuration
 dataset:
-  llama_stack:
-    name: imdb
-    split: test
-    text_field: text
-    label_field: label
+  standard:
+    module: textattack.datasets
+    name: HuggingFaceDataset
+    params:
+      name_or_dataset: imdb
+      split: test
+      dataset_columns: [
+        ["text"],
+        "label"
+      ]
 
 # Attack parameters
 attack_params:
@@ -33,8 +38,8 @@ loggers:
   - module: textattack.loggers
     name: CSVLogger
     params:
-      filename: results/textfooler_results.csv
+      filename: results/textattack/textfooler_results.csv
   - module: textattack.loggers
     name: FileLogger
     params:
-      filename: results/textfooler_results.txt
+      filename: results/textattack/textfooler_results.txt

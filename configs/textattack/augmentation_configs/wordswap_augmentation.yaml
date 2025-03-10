@@ -8,17 +8,16 @@ transformation:
   name: WordSwapEmbedding
   params:
     max_candidates: 15
-    embedding_type: paragramcf
+    # embedding is automatically initialized with default
 
 # Constraints
 constraints:
   - module: textattack.constraints.semantics
     name: WordEmbeddingDistance
     params:
-      embedding_type: paragramcf
       min_cos_sim: 0.7
       
-  - module: textattack.constraints.semantics
+  - module: textattack.constraints.semantics.sentence_encoders.universal_sentence_encoder
     name: UniversalSentenceEncoder
     params:
       threshold: 0.8
@@ -36,16 +35,20 @@ pre_transformation_constraints:
   - module: textattack.constraints.pre_transformation
     name: RepeatModification
 
+# Model configuration
+model:
+  module: textattack.models.wrappers
+  name: HuggingFaceModelWrapper
+  params:
+    model_name: distilbert-base-uncased-finetuned-sst-2-english
+
 # Goal function
 goal_function:
   module: textattack.goal_functions
   name: UntargetedClassification
   params:
-    model:
-      module: textattack.models.wrappers
-      name: HuggingFaceModelWrapper
-      params:
-        model_name: textattack/bert-base-uncased-sst2
+    model_wrapper:
+      _model_wrapper_injected_by_provider: true
 
 # Search method
 search_method:
@@ -56,11 +59,17 @@ search_method:
 
 # Dataset configuration
 dataset:
-  llama_stack:
-    name: sst2
-    split: validation
-    text_field: sentence
-    label_field: label
+  standard:
+    module: textattack.datasets
+    name: HuggingFaceDataset
+    params:
+      name_or_dataset: glue
+      subset: sst2
+      split: validation
+      dataset_columns: [
+        ["sentence"],
+        "label"
+      ]
 
 # Attack parameters
 attack_params:
@@ -72,4 +81,4 @@ loggers:
   - module: textattack.loggers
     name: CSVLogger
     params:
-      filename: results/custom_attack_results.csv
+      filename: results/textattack/wordswap_results.csv

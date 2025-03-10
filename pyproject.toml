@@ -36,6 +36,7 @@ dependencies = [
     "termcolor",
     "tiktoken",
     "pillow",
+    "tensorflow-hub (>=0.16.1,<0.17.0)",
 ]
 
 [project.optional-dependencies]
