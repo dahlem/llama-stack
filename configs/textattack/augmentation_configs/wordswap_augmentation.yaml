@@ -1,0 +1,75 @@
+# Custom Attack Configuration
+operation: attack
+attack_type: custom
+
+# Transformation
+transformation:
+  module: textattack.transformations
+  name: WordSwapEmbedding
+  params:
+    max_candidates: 15
+    embedding_type: paragramcf
+
+# Constraints
+constraints:
+  - module: textattack.constraints.semantics
+    name: WordEmbeddingDistance
+    params:
+      embedding_type: paragramcf
+      min_cos_sim: 0.7
+      
+  - module: textattack.constraints.semantics
+    name: UniversalSentenceEncoder
+    params:
+      threshold: 0.8
+      
+  - module: textattack.constraints.overlap
+    name: MaxWordsPerturbed
+    params:
+      max_percent: 0.2
+
+# Pre-transformation constraints
+pre_transformation_constraints:
+  - module: textattack.constraints.pre_transformation
+    name: StopwordModification
+  
+  - module: textattack.constraints.pre_transformation
+    name: RepeatModification
+
+# Goal function
+goal_function:
+  module: textattack.goal_functions
+  name: UntargetedClassification
+  params:
+    model:
+      module: textattack.models.wrappers
+      name: HuggingFaceModelWrapper
+      params:
+        model_name: textattack/bert-base-uncased-sst2
+
+# Search method
+search_method:
+  module: textattack.search_methods
+  name: GreedyWordSwapWIR
+  params:
+    wir_method: gradient
+
+# Dataset configuration
+dataset:
+  llama_stack:
+    name: sst2
+    split: validation
+    text_field: sentence
+    label_field: label
+
+# Attack parameters
+attack_params:
+  num_examples: 10
+  shuffle: true
+
+# Logging configuration
+loggers:
+  - module: textattack.loggers
+    name: CSVLogger
+    params:
+      filename: results/custom_attack_results.csv

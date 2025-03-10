@@ -1,0 +1,33 @@
+# Back Translation Augmentation Configuration
+operation: augmentation
+
+# Back translation transformation
+transformation:
+  module: textattack.transformations
+  name: BackTranslation
+  params:
+    src_lang: en
+    target_lang: fr
+
+# Dataset using standard TextAttack dataset
+dataset:
+  standard:
+    module: textattack.datasets
+    name: HuggingFaceDataset
+    params:
+      name_or_dataset: glue
+      subset: sst2
+      split: train
+      dataset_columns: [
+        ["sentence"],
+        "label"
+      ]
+
+# Augmentation parameters
+augmentation:
+  transformations_per_example: 2
+  
+  # Export to CSV format
+  export:
+    format: csv
+    path: results/textattack/sst2_backtranslated.csv

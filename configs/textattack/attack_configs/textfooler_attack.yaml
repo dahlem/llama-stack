@@ -1,0 +1,40 @@
+# TextFooler Attack Recipe Configuration
+operation: attack
+attack_type: recipe
+
+# Using a predefined attack recipe
+attack_recipe:
+  module: textattack.attack_recipes
+  name: TextFoolerJin2019
+
+# Model to attack
+model:
+  module: textattack.models.wrappers
+  name: HuggingFaceModelWrapper
+  params:
+    model_name: textattack/bert-base-uncased-imdb
+
+# Dataset configuration
+dataset:
+  llama_stack:
+    name: imdb
+    split: test
+    text_field: text
+    label_field: label
+
+# Attack parameters
+attack_params:
+  num_examples: 20
+  shuffle: true
+  attack_n: false
+
+# Logging configuration
+loggers:
+  - module: textattack.loggers
+    name: CSVLogger
+    params:
+      filename: results/textfooler_results.csv
+  - module: textattack.loggers
+    name: FileLogger
+    params:
+      filename: results/textfooler_results.txt
